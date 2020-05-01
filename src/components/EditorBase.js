@@ -1,12 +1,21 @@
 import React, { useState, useEffect } from 'react'
-
 import styled from 'styled-components'
-import {Editor, EditorState} from 'draft-js'
+
+import { Editor, EditorState, RichUtils } from 'draft-js'
 import 'draft-js/dist/Draft.css'
 
 const EditorBase = ({EditorStyle, ControlsStyle, WrapperStyles, handleExternal, ...props}) => {
 		const [rich, setRich] = useState(EditorState.createEmpty())
 		
+		// Manage styles/actions triggered by key comands
+		// Ex.: (Bold = ctrl + b, Italic = ctrl + i, Underline = ctrl + u)
+			const handleKeyCommand = (command, editorState) => {
+				const newState = RichUtils.handleKeyCommand(editorState, command);
+				newState && setRich(newState)
+			}
+
+
+		// Manage Editor state outside the Editor component
 		useEffect(() => {
 			handleExternal && handleExternal(rich)
 		}, [rich])
@@ -14,7 +23,12 @@ const EditorBase = ({EditorStyle, ControlsStyle, WrapperStyles, handleExternal, 
     return (
 			<EditorWrapper style={WrapperStyles} className='Rich-txt_wrapper'>
 				<div style={{height: 400, overflow: 'auto'}}>
-					<Editor className='Rich-txt_editor' editorState={rich} onChange={setRich} />
+					<Editor
+						className='Rich-txt_editor'
+						editorState={rich}
+						onChange={setRich}
+						handleKeyCommand={handleKeyCommand}
+					/>
 				</div>
 			</EditorWrapper>
     )

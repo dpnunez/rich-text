@@ -8,8 +8,9 @@ import ReactJson from 'react-json-view'
 const App = () => {
 
   const [examplesRaw, setExamplesRaw] = useState({
-    basic: null,
+    basic: {},
   })
+
   return (
     <div>
       <h1>##Examples</h1>
